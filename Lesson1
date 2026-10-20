@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Vulnerabilities in Global Supply Chains - University Course Module</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0f172a',
+                        },
+                        cyber: {
+                            danger: '#ef4444',
+                            warning: '#f59e0b',
+                            success: '#10b981',
+                            accent: '#6366f1'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        /* Pulse glowing effect for cyber badge */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.8); }
+        }
+        .cyber-alert-glow {
+            animation: pulse-glow 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-300">
+
+    <!-- Progress Bar Top -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-slate-200 dark:bg-slate-800 z-50">
+        <div id="scrollProgress" class="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-400 w-0 transition-all duration-150"></div>
+    </div>
+
+    <!-- Main Container Layout -->
+    <div class="min-h-screen flex flex-col md:flex-row">
+
+        <!-- Mobile Header Toggle -->
+        <div class="md:hidden flex items-center justify-between p-4 bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid me-2 fa-shield-halved text-cyan-400 text-xl"></i>
+                <span class="font-bold text-sm tracking-wide">SCM 440: CYBERSECURITY</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="themeToggleMobile" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline text-amber-400"></i>
+                </button>
+                <button id="sidebarToggle" class="p-2 rounded-lg bg-slate-800 text-slate-300">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="hidden md:flex flex-col w-full md:w-72 bg-slate-900 text-slate-300 border-r border-slate-800 fixed md:sticky top-0 h-screen z-30 overflow-y-auto shrink-0 transition-all duration-300">
+            <!-- Sidebar Header -->
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                <div>
+                    <div class="flex items-center space-x-2 text-xs font-semibold text-cyan-400 tracking-wider uppercase mb-1">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span>SCM / LOG 485</span>
+                    </div>
+                    <h1 class="font-bold text-lg text-white leading-snug">Supply Chain Cybersecurity</h1>
+                </div>
+                <button id="themeToggle" class="hidden md:flex p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-amber-300 transition-colors">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline text-amber-400"></i>
+                </button>
+            </div>
+
+            <!-- Module Metadata -->
+            <div class="px-6 py-4 bg-slate-950/50 border-b border-slate-800 text-xs text-slate-400 space-y-1">
+                <div class="flex justify-between"><span>Module:</span> <span class="text-slate-200 font-mono">04 / 12</span></div>
+                <div class="flex justify-between"><span>Est. Duration:</span> <span class="text-slate-200 font-mono">60 Mins</span></div>
+                <div class="flex justify-between"><span>Level:</span> <span class="text-emerald-400 font-medium">Advanced Undergraduate</span></div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="p-4 space-y-1 text-sm font-medium flex-1">
+                <a href="#overview" class="nav-link group flex items-center px-3 py-2.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors active-nav">
+                    <i class="fa-solid fa-chart-line w-6 text-slate-500 group-hover:text-cyan-400"></i>
+                    <span>1. Threat Landscape</span>
+                </a>
+                <a href="#case-studies" class="nav-link group flex items-center px-3 py-2.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-circle-exclamation w-6 text-slate-500 group-hover:text-amber-400"></i>
+                    <span>2. Four Case Studies</span>
+                </a>
+                <a href="#mitigation" class="nav-link group flex items-center px-3 py-2.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-shield-virus w-6 text-slate-500 group-hover:text-emerald-400"></i>
+                    <span>3. Mitigation Matrix</span>
+                </a>
+                <a href="#simulator" class="nav-link group flex items-center px-3 py-2.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-network-wired w-6 text-slate-500 group-hover:text-purple-400"></i>
+                    <span>4. Attack Simulator</span>
+                </a>
+                <a href="#calculator" class="nav-link group flex items-center px-3 py-2.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-calculator w-6 text-slate-500 group-hover:text-blue-400"></i>
+                    <span>5. Cyber Risk Audit Tool</span>
+                </a>
+                <a href="#quiz" class="nav-link group flex items-center px-3 py-2.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-list-check w-6 text-slate-500 group-hover:text-rose-400"></i>
+                    <span>6. Knowledge Assessment</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="p-4 border-t border-slate-800 text-xs text-slate-500 text-center">
+                Logistics & Operations Resilience Institute &copy; 2026
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-8 py-8 w-full overflow-x-hidden">
+
+            <!-- Hero Module Header Banner -->
+            <header class="relative rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-10 mb-10 overflow-hidden shadow-2xl border border-slate-800">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-cyan-400 pointer-events-none">
+                    <i class="fa-solid fa-boxes-packing text-[240px]"></i>
+                </div>
+                <div class="relative z-10 max-w-3xl">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono uppercase tracking-widest mb-4">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                        <span>Interactive Academic Unit</span>
+                    </div>
+                    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+                        Cybersecurity Vulnerabilities in Global Supply Chains
+                    </h1>
+                    <p class="text-slate-300 text-base sm:text-lg leading-relaxed mb-6">
+                        An executive course for future logistics directors, supply chain managers, and operations analysts examining operational risk, vector compromises, and defense frameworks in digitized physical supply networks.
+                    </p>
+                    <div class="flex flex-wrap gap-4 text-xs font-mono text-slate-300">
+                        <span class="bg-slate-800/80 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-700/50 flex items-center gap-2">
+                            <i class="fa-solid fa-user-shield text-cyan-400"></i> Module Author: Dept. of SCM
+                        </span>
+                        <span class="bg-slate-800/80 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-700/50 flex items-center gap-2">
+                            <i class="fa-solid fa-book-open text-indigo-400"></i> 4 Real-World Case Studies
+                        </span>
+                        <span class="bg-slate-800/80 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-700/50 flex items-center gap-2">
+                            <i class="fa-solid fa-gamepad text-emerald-400"></i> 2 Interactive Simulations
+                        </span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- SECTION 1: OVERVIEW & CURRENT STATE -->
+            <section id="overview" class="mb-16 scroll-mt-6">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                        <i class="fa-solid fa-chart-line text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">1. Threat Landscape & Current State</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Why digitized logistics networks are primary cyber targets</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Key Metric Cards -->
+                    <div class="bg-white dark:bg-slate-800/80 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-rose-500"></div>
+                        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Impact Frequency</div>
+                        <div class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">74%</div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Of global logistics enterprises experienced at least one third-party supply chain cyber disruption in the past 24 months.
+                        </p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800/80 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
+                        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Average Incident Cost</div>
+                        <div class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">$4.8M</div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Average financial loss per major supply chain security event, excluding long-term brand equity damage and legal fines.
+                        </p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800/80 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-cyan-500"></div>
+                        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Target Surface</div>
+                        <div class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">15x</div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Expansion of corporate attack surface due to warehouse IoT, autonomous AGVs, telematics, and EDI integrations.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Comprehensive Narrative -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6 text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">The Convergence of Physical & Digital Logistics</h3>
+                    <p>
+                        Modern logistics is no longer just about diesel, shipping containers, and manual warehousing. Today’s global supply chain operates as a hyper-connected, just-in-time digital ecosystem governed by Enterprise Resource Planning (ERP) systems, Transportation Management Systems (TMS), Warehouse Management Systems (WMS), and thousands of Industrial IoT (IIoT) sensors.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-6">
+                        <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <h4 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2 mb-2">
+                                <i class="fa-solid fa-microchip text-indigo-500"></i> IoT & Smart Logistics Expansion
+                            </h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                Temperature tracking sensors in cold chains, GPS transponders on intermodal chassis, electronic logging devices (ELDs) in trucks, and automated sorting robotics in fulfillment centers provide operational efficiency—but every connected device acts as an unmonitored entry point for threat actors.
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <h4 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2 mb-2">
+                                <i class="fa-solid fa-ship text-cyan-500"></i> Maritime & Port Infrastructure Vulnerabilities
+                            </h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                Global maritime shipping handles over 80% of world trade. Modern port terminals utilize legacy Operational Technology (OT) and Programmable Logic Controllers (PLCs) to move massive gantry cranes. A single ransomware attack on a port terminal operating system can immobilize dozens of container vessels, triggering global supply shortages.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 flex gap-4 items-start">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xl mt-1 shrink-0"></i>
+                        <div class="text-sm">
+                            <strong class="font-bold block mb-1">Key Concept for Logistics Managers: "Asymmetric Vulnerability"</strong>
+                            Logistics companies typically maintain smaller cybersecurity budgets compared to financial institutions, yet they manage shared access networks with Fortune 500 manufacturers, defense contractors, and retail giants. Threat actors exploit logistics networks as "stepping-stone" vectors to breach higher-value corporate targets.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: CASE STUDIES -->
+            <section id="case-studies" class="mb-16 scroll-mt-6">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-circle-exclamation text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">2. Case Studies: Supply Chain Breaches</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Four distinct real-world/exemplar failure modes in global logistics</p>
+                    </div>
+                </div>
+
+                <!-- Case Study Interactive Tabs -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden mb-8">
+                    <!-- Tab Buttons Header -->
+                    <div class="flex flex-wrap border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                        <button onclick="switchCaseTab(1)" id="caseTab1" class="case-tab-btn px-5 py-4 text-sm font-semibold flex items-center gap-2 border-b-2 border-cyan-500 text-cyan-600 dark:text-cyan-400 bg-white dark:bg-slate-800 transition-all">
+                            <i class="fa-solid fa-code-branch"></i>
+                            <span>1. Software Vendor Breach</span>
+                        </button>
+                        <button onclick="switchCaseTab(2)" id="caseTab2" class="case-tab-btn px-5 py-4 text-sm font-semibold flex items-center gap-2 border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+                            <i class="fa-solid fa-industry"></i>
+                            <span>2. OT / Port Infrastructure</span>
+                        </button>
+                        <button onclick="switchCaseTab(3)" id="caseTab3" class="case-tab-btn px-5 py-4 text-sm font-semibold flex items-center gap-2 border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+                            <i class="fa-solid fa-robot"></i>
+                            <span>3. Warehouse IoT Attack</span>
+                        </button>
+                        <button onclick="switchCaseTab(4)" id="caseTab4" class="case-tab-btn px-5 py-4 text-sm font-semibold flex items-center gap-2 border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+                            <i class="fa-solid fa-truck-fast"></i>
+                            <span>4. Freight BEC & Hijacking</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab Content Container -->
+                    <div class="p-6 sm:p-8">
+                        <!-- Case 1: Software Supply Chain -->
+                        <div id="caseContent1" class="case-content space-y-6">
+                            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-700/60 pb-4">
+                                <div>
+                                    <span class="px-2.5 py-1 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-mono font-bold uppercase">Software Supply Chain Vector</span>
+                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">The Upstream Enterprise Software Compromise</h3>
+                                </div>
+                                <div class="text-right text-xs text-slate-400 font-mono">
+                                    <div>Target Type: Managed File Transfer / ERP</div>
+                                    <div>Impact: $150M+ Operational Loss</div>
+                                </div>
+                            </div>
+
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                                In this exemplar scenario based on major MOVEit and SolarWinds software compromises, a zero-day vulnerability was exploited in a widely used third-party Managed File Transfer (MFT) application deployed across global 3PLs and logistics integrators. Threat actors injected malicious code into automated file exchanges used for custom clearance documents, Bills of Lading (BoL), and inventory manifests.
+                            </p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+                                <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider text-rose-500 mb-2">The Weakness Identified</h4>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 list-disc list-inside">
+                                        <li>Over-reliance on single vendor software updates without staging/testing.</li>
+                                        <li>Excessive systemic privileges granted to third-party file transfer tools.</li>
+                                        <li>Lack of end-to-end data encryption for transactional EDI exchange messages.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Cascade Supply Chain Damage</h4>
+                                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                        The breach exposed sensitive customs declarations across 400 global shippers, leaking commercial invoices and trade secrets. Customs authorities halted automated clearance pathways, resulting in border processing delays that extended turnaround times from 3 hours to 9 days.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Case 2: OT & Critical Infrastructure -->
+                        <div id="caseContent2" class="case-content hidden space-y-6">
+                            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-700/60 pb-4">
+                                <div>
+                                    <span class="px-2.5 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-mono font-bold uppercase">Operational Technology (OT) Compromise</span>
+                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Container Port Terminal & Pipeline Grid Lock</h3>
+                                </div>
+                                <div class="text-right text-xs text-slate-400 font-mono">
+                                    <div>Target Type: SCADA / Crane Controllers / TOS</div>
+                                    <div>Impact: 6-Day Maritime Bottleneck</div>
+                                </div>
+                            </div>
+
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Modeled after real-world ransomware strikes on major European port operators and energy pipelines (e.g., Colonial Pipeline, Port of Nagoya), threat actors gained initial access through a compromised remote administrative VPN login lacking Multi-Factor Authentication (MFA). The attackers deployed ransomware that encrypted both IT administrative servers and the terminal’s Operational Technology (OT) networks.
+                            </p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+                                <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider text-amber-500 mb-2">The Weakness Identified</h4>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 list-disc list-inside">
+                                        <li>Flat network architecture lacking isolation between corporate IT and physical OT.</li>
+                                        <li>Legacy SCADA controllers unable to run endpoint protection software.</li>
+                                        <li>Absence of out-of-band manual override procedures for automated crane systems.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Cascade Supply Chain Damage</h4>
+                                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                        28 container ships were forced to anchor offshore. Trucking fleets experienced 12-hour queues at port gates as manual paper gate-checks replaced automated OCR scanners. Local manufacturing plants faced emergency assembly line shutdowns due to delayed parts delivery.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Case 3: IoT Warehouse Hardware -->
+                        <div id="caseContent3" class="case-content hidden space-y-6">
+                            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-700/60 pb-4">
+                                <div>
+                                    <span class="px-2.5 py-1 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 text-xs font-mono font-bold uppercase">Hardware & Automation Vector</span>
+                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Smart Warehouse Robotics & Scanner Hijacking</h3>
+                                </div>
+                                <div class="text-right text-xs text-slate-400 font-mono">
+                                    <div>Target Type: Wi-Fi Barcode Scanners / AGVs</div>
+                                    <div>Impact: $18M Inventory Misrouting</div>
+                                </div>
+                            </div>
+
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                                In an automated mega-fulfillment center, attackers targeted handheld wireless barcode scanners and Automated Guided Vehicles (AGVs) operating on unencrypted, legacy Wi-Fi protocols. By flashing malicious firmware onto compromised smart warehouse sensors, the attackers manipulated real-time inventory counts across the Warehouse Management System (WMS).
+                            </p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+                                <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider text-purple-500 mb-2">The Weakness Identified</h4>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 list-disc list-inside">
+                                        <li>Default factory passwords left unchanged on hundreds of IoT edge sensors.</li>
+                                        <li>Lack of digital signature verification for wireless firmware updates.</li>
+                                        <li>Insecure Wi-Fi subnet sharing between guest networks and warehouse machinery.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Cascade Supply Chain Damage</h4>
+                                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                        High-value pharmaceuticals were mislabeled as low-value consumer goods at sorting belts, enabling physical theft at loading docks. Over 45,000 packages were sent to incorrect distribution centers before the WMS discrepancy was detected.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Case 4: BEC Freight Hijacking -->
+                        <div id="caseContent4" class="case-content hidden space-y-6">
+                            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-700/60 pb-4">
+                                <div>
+                                    <span class="px-2.5 py-1 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-mono font-bold uppercase">Human & Social Engineering Vector</span>
+                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Business Email Compromise (BEC) & Cargo Theft</h3>
+                                </div>
+                                <div class="text-right text-xs text-slate-400 font-mono">
+                                    <div>Target Type: 3PL Brokerage / Dispatch EDI</div>
+                                    <div>Impact: $12M Physical Cargo Loss</div>
+                                </div>
+                            </div>
+
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Cybercriminals compromised the email domain of a mid-sized freight brokerage company using spear-phishing. Impersonating senior freight dispatchers, the attackers sent fraudulent load tenders, modified routing instructions, and altered wire payment details for carrier payouts across multiple digital load boards.
+                            </p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+                                <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider text-blue-500 mb-2">The Weakness Identified</h4>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 list-disc list-inside">
+                                        <li>Inadequate email authentication protocols (missing strict DMARC, DKIM, SPF).</li>
+                                        <li>Absence of out-of-band phone/verbal verification for banking detail changes.</li>
+                                        <li>High staff turnover and lack of cybersecurity awareness training for dispatch clerks.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Cascade Supply Chain Damage</h4>
+                                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                        Six high-value electronics shipments (worth $12 Million) were picked up by fake carrier sub-contractors and diverted to unauthorized warehouses. Freight payments were wired directly to fraudulent offshore accounts.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: MITIGATION MATRIX -->
+            <section id="mitigation" class="mb-16 scroll-mt-6">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        <i class="fa-solid fa-shield-virus text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">3. Strategic Mitigation Framework</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Tactical defenses directly mapped to the four core supply chain vulnerabilities</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Strategy Card 1 -->
+                    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-rose-500/10 text-rose-500">Defense for Ex. 1</span>
+                                <i class="fa-solid fa-user-lock text-rose-500 text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Vendor Risk Management & Zero Trust Architecture</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Mitigates: Software Supply Chain & Third-Party System Access</p>
+                            
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Software Bill of Materials (SBOM):</strong> Mandate that all software vendors supply a verified SBOM to audit embedded libraries.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Principle of Least Privilege (PoLP):</strong> Restrict third-party API integrations to read-only access for core ERP data.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Continuous SLA Auditing:</strong> Conduct quarterly penetration testing on external logistics partner interfaces.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Strategy Card 2 -->
+                    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-amber-500/10 text-amber-500">Defense for Ex. 2</span>
+                                <i class="fa-solid fa-network-wired text-amber-500 text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">OT/IT Network Segmentation & Air-Gapping</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Mitigates: Port Container Terminal & Infrastructure Disruption</p>
+                            
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Purdue Model Architecture:</strong> Isolate physical gantry cranes and SCADA PLCs from corporate internet networks.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Immutable Backups:</strong> Maintain offline, air-gapped backups of Terminal Operating System configurations.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Analog Resilience:</strong> Train dock personnel on manual override procedures to maintain emergency throughput during outages.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Strategy Card 3 -->
+                    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-purple-500/10 text-purple-500">Defense for Ex. 3</span>
+                                <i class="fa-solid fa-microchip text-purple-500 text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">IoT Security Frameworks & Cryptographic Signing</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Mitigates: Warehouse Hardware & Smart Sensor Vulnerabilities</p>
+                            
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Firmware Validation:</strong> Require cryptographic digital signatures on all wireless updates for handheld scanners.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Isolated VLANs:</strong> Place warehouse AGVs, IoT sensors, and handheld tools on segregated physical Wi-Fi channels.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Automated Credential Rotation:</strong> Eliminate default root credentials via automated IoT identity management.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Strategy Card 4 -->
+                    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-blue-500/10 text-blue-500">Defense for Ex. 4</span>
+                                <i class="fa-solid fa-file-signature text-blue-500 text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Anti-Fraud Verification & Multi-Factor Auth</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Mitigates: Business Email Compromise & Freight Routing Fraud</p>
+                            
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Dual-Control Authorization:</strong> Require two-person verbal confirmation for banking detail modifications.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Strict DMARC Policy:</strong> Enforce `p=reject` email policies to block fraudulent domain spoofing.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                    <span><strong>Digital Carrier Verification:</strong> Utilize automated APIs (e.g., FMCSA verification tools) before issuing high-value tenders.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 4: INTERACTIVE BREACH SIMULATOR -->
+            <section id="simulator" class="mb-16 scroll-mt-6">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                        <i class="fa-solid fa-gamepad text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">4. Interactive Breach Simulator</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Test your crisis management skills in a live logistics cyber incident</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 text-slate-100 rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-xl">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-500/20 text-rose-400 font-mono text-sm font-bold border border-rose-500/30">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </span>
+                            <div>
+                                <h3 class="font-bold text-white text-lg">Scenario: Attack on Central Distribution Center #4</h3>
+                                <p class="text-xs text-slate-400">Role: Operations Director</p>
+                            </div>
+                        </div>
+                        <button onclick="resetSimulator()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300 transition-colors">
+                            <i class="fa-solid fa-rotate-right mr-1"></i> Restart Scenario
+                        </button>
+                    </div>
+
+                    <!-- Simulator Console Body -->
+                    <div id="simScreen" class="space-y-6">
+                        <!-- Dynamic Content Inserted Here by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: INTERACTIVE RISK AUDIT CALCULATOR -->
+            <section id="calculator" class="mb-16 scroll-mt-6">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                        <i class="fa-solid fa-calculator text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">5. Logistics Cyber-Risk Audit Calculator</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Evaluate a supply chain's cybersecurity exposure score</p>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <p class="text-sm text-slate-600 dark:text-slate-300 mb-6">
+                        Adjust the security posture parameters below to calculate the estimated annual financial loss expectation (ALE) and vulnerability index for a hypothetical 3PL operation.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <!-- Controls -->
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-sm font-medium text-slate-900 dark:text-white mb-2">
+                                    <label for="vendorAuditRange">1. Third-Party Vendor Security Audits</label>
+                                    <span id="vendorVal" class="font-mono text-cyan-600 dark:text-cyan-400 font-bold">50% Covered</span>
+                                </div>
+                                <input type="range" id="vendorAuditRange" min="0" max="100" value="50" oninput="updateCalculator()" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+                                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                                    <span>No Audits (High Risk)</span>
+                                    <span>100% Zero-Trust Audit</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-sm font-medium text-slate-900 dark:text-white mb-2">
+                                    <label for="otIsolationRange">2. OT / Warehouse Network Isolation</label>
+                                    <span id="otVal" class="font-mono text-cyan-600 dark:text-cyan-400 font-bold">Partial Air-Gap</span>
+                                </div>
+                                <input type="range" id="otIsolationRange" min="0" max="2" value="1" step="1" oninput="updateCalculator()" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+                                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                                    <span>Flat IT/OT Network</span>
+                                    <span>Segmented Subnets</span>
+                                    <span>Complete Air-Gap</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-sm font-medium text-slate-900 dark:text-white mb-2">
+                                    <label for="becAuthRange">3. Anti-Fraud & Email Controls (DMARC/MFA)</label>
+                                    <span id="becVal" class="font-mono text-cyan-600 dark:text-cyan-400 font-bold">Moderate</span>
+                                </div>
+                                <input type="range" id="becAuthRange" min="0" max="100" value="40" oninput="updateCalculator()" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+                                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                                    <span>Basic Email</span>
+                                    <span>Enforced Dual-Control</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Score Display Box -->
+                        <div class="bg-slate-50 dark:bg-slate-900/80 rounded-xl p-6 border border-slate-200 dark:border-slate-700 flex flex-col justify-between text-center">
+                            <div>
+                                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Calculated Cyber Risk Exposure</div>
+                                <div id="riskScoreBadge" class="inline-block px-4 py-1.5 rounded-full text-xs font-mono font-bold mb-4 bg-amber-500/10 text-amber-600 border border-amber-500/30">
+                                    MODERATE EXPOSURE
+                                </div>
+                                
+                                <div class="text-4xl font-extrabold text-slate-900 dark:text-white font-mono mb-1" id="riskLossVal">$2,450,000</div>
+                                <div class="text-xs text-slate-500 dark:text-slate-400">Estimated Annual Loss Expectation (ALE)</div>
+                            </div>
+
+                            <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 text-left text-xs space-y-2 text-slate-600 dark:text-slate-300">
+                                <div class="flex justify-between">
+                                    <span>Ransomware Threat Factor:</span>
+                                    <span id="ransomFactor" class="font-mono font-bold text-slate-900 dark:text-white">Medium</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Cargo Fraud Threat Factor:</span>
+                                    <span id="becFactor" class="font-mono font-bold text-slate-900 dark:text-white">High</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: KNOWLEDGE CHECK QUIZ -->
+            <section id="quiz" class="mb-16 scroll-mt-6">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2.5 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                        <i class="fa-solid fa-list-check text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">6. Knowledge Check Quiz</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Verify your understanding of supply chain cyber vulnerabilities</p>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div id="quizContainer" class="space-y-8">
+                        <!-- Quiz questions will render here -->
+                    </div>
+
+                    <!-- Quiz Score Summary Container -->
+                    <div id="quizSummary" class="hidden mt-8 p-6 rounded-xl bg-slate-900 text-white text-center space-y-4">
+                        <h3 class="text-xl font-bold">Assessment Complete!</h3>
+                        <p class="text-3xl font-extrabold text-cyan-400 font-mono" id="quizScoreText">0 / 4</p>
+                        <p class="text-sm text-slate-300" id="quizFeedbackText"></p>
+                        <button onclick="resetQuiz()" class="px-5 py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-sm transition-colors">
+                            Retake Quiz
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Module Conclusion & Summary -->
+            <footer class="bg-slate-900 text-slate-300 rounded-2xl p-8 border border-slate-800">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2">Module Summary & Key Takeaways</h3>
+                        <p class="text-sm text-slate-400 max-w-2xl leading-relaxed">
+                            Cybersecurity is no longer strictly an IT department concern—it is a core logistics strategy imperative. Supply chain resilience requires continuous vendor management, air-gapped operational technology, secure IoT deployment, and strict financial anti-fraud protocols.
+                        </p>
+                    </div>
+                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-colors shrink-0 flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-up"></i> Back to Top
+                    </button>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* ----------------------------------------------------
+           1. THEME TOGGLE & PROGRESS BAR
+        ---------------------------------------------------- */
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeToggleMobileBtn = document.getElementById('themeToggleMobile');
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleMobileBtn.addEventListener('click', toggleTheme);
+
+        // System or Saved Theme Preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Mobile Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        /* ----------------------------------------------------
+           2. CASE STUDIES TAB SWITCHER
+        ---------------------------------------------------- */
+        function switchCaseTab(tabNum) {
+            // Hide all contents
+            document.querySelectorAll('.case-content').forEach(el => el.classList.add('hidden'));
+            // Reset tab styles
+            document.querySelectorAll('.case-tab-btn').forEach(btn => {
+                btn.classList.remove('border-cyan-500', 'text-cyan-600', 'dark:text-cyan-400', 'bg-white', 'dark:bg-slate-800');
+                btn.classList.add('border-transparent', 'text-slate-500', 'dark:text-slate-400');
+            });
+
+            // Active Tab
+            document.getElementById(`caseContent${tabNum}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`caseTab${tabNum}`);
+            activeBtn.classList.add('border-cyan-500', 'text-cyan-600', 'dark:text-cyan-400', 'bg-white', 'dark:bg-slate-800');
+            activeBtn.classList.remove('border-transparent', 'text-slate-500', 'dark:text-slate-400');
+        }
+
+        /* ----------------------------------------------------
+           3. INTERACTIVE ATTACK SIMULATOR (DECISION TREE)
+        ---------------------------------------------------- */
+        const simTree = {
+            start: {
+                title: "Alert! Warehouse Management System (WMS) Disruption",
+                text: "It is 02:15 AM on Cyber Monday. Terminal monitoring reports that 40% of automated guided vehicles (AGVs) in DC #4 have stopped responding, and picking scanners are displaying unauthorized encrypted popups.",
+                choices: [
+                    { text: "Option A: Immediately power down the warehouse local area network (LAN) to isolate machines.", next: "power_down" },
+                    { text: "Option B: Instruct warehouse operators to manually bypass AGVs and continue using paper picking sheets while IT investigates.", next: "paper_bypass" },
+                    { text: "Option C: Attempt to remotely re-flash AGV firmware updates from the centralized admin dashboard.", next: "reflash" }
+                ]
+            },
+            power_down: {
+                title: "Network Isolated - Spread Halting",
+                text: "Powering down the local subnet successfully prevented the malware from spreading across the corporate VPN to other regional distribution centers. However, 1,200 truck loads are now delayed at the gate.",
+                choices: [
+                    { text: "Option A: Perform forensic audit on OT subnet and deploy immutable offline backups.", next: "win_recovery" },
+                    { text: "Option B: Turn network back on quickly after restarting server host nodes without deep audit.", next: "fail_reinfection" }
+                ]
+            },
+            paper_bypass: {
+                title: "Partial Continuity - Malware Spreading Upstream",
+                text: "Paper picking allows dock workers to maintain 25% throughput, but because the infected network remained active, the ransomware accessed connected third-party 3PL carrier portals, sending corrupted dispatch notices globally.",
+                choices: [
+                    { text: "Option A: Sever all third-party API links immediately and isolate network.", next: "power_down" },
+                    { text: "Option B: Contact external cyber incident response experts while leaving operations running.", next: "fail_catastrophe" }
+                ]
+            },
+            reflash: {
+                title: "Firmware Flash Blocked - Threat Elevated",
+                text: "The attackers modified administrative credentials. Attempting to issue remote firmware commands inadvertently executed the attacker's payload, locking down the central database.",
+                choices: [
+                    { text: "Option A: Cut physical power to servers and initiate emergency air-gap response protocols.", next: "power_down" }
+                ]
+            },
+            win_recovery: {
+                title: "SUCCESSFUL RESILIENCE & CONTAINMENT",
+                isEnd: true,
+                success: true,
+                text: "EXCELLENT DECISION MAKING. By immediately isolating the infected subnet and enforcing forensic air-gap audits, you limited operational downtime to 8 hours and prevented corporate-wide lateral infection. Your incident response plan saved an estimated $8.5M in potential damages."
+            },
+            fail_reinfection: {
+                title: "CRITICAL FAILURE - RE-INFECTION TRIGGERED",
+                isEnd: true,
+                success: false,
+                text: "FAILED RESPONSE. Restarting systems without purging the backdoor allowed attackers to execute secondary ransomware encryptions. All regional fulfillment centers were knocked offline for 5 days."
+            },
+            fail_catastrophe: {
+                title: "CRITICAL FAILURE - GLOBAL SYSTEM CONTAGION",
+                isEnd: true,
+                success: false,
+                text: "FAILED RESPONSE. Delaying network isolation caused malware contagion across 14 external logistics partners. Cyber insurance declined coverage due to gross negligence of protocol."
+            }
+        };
+
+        let currentSimState = "start";
+
+        function renderSimulator() {
+            const simScreen = document.getElementById('simScreen');
+            const state = simTree[currentSimState];
+
+            if (state.isEnd) {
+                simScreen.innerHTML = `
+                    <div class="p-6 rounded-xl ${state.success ? 'bg-emerald-950/80 border border-emerald-500/40 text-emerald-100' : 'bg-rose-950/80 border border-rose-500/40 text-rose-100'} space-y-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid ${state.success ? 'fa-circle-check text-emerald-400' : 'fa-circle-xmark text-rose-400'} text-3xl"></i>
+                            <h4 class="text-xl font-bold">${state.title}</h4>
+                        </div>
+                        <p class="text-sm leading-relaxed">${state.text}</p>
+                        <button onclick="resetSimulator()" class="mt-4 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-white transition-colors">
+                            Try Another Strategy
+                        </button>
+                    </div>
+                `;
+            } else {
+                let choicesHTML = state.choices.map(choice => `
+                    <button onclick="makeSimChoice('${choice.next}')" class="w-full text-left p-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-sm font-medium text-slate-200 transition-all hover:border-cyan-500/50 flex items-start gap-3">
+                        <i class="fa-solid fa-chevron-right text-cyan-400 mt-1 shrink-0"></i>
+                        <span>${choice.text}</span>
+                    </button>
+                `).join('');
+
+                simScreen.innerHTML = `
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-bold text-cyan-400 font-mono">${state.title}</h4>
+                        <p class="text-sm text-slate-300 leading-relaxed">${state.text}</p>
+                        <div class="pt-4 space-y-3">
+                            ${choicesHTML}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function makeSimChoice(nextState) {
+            currentSimState = nextState;
+            renderSimulator();
+        }
+
+        function resetSimulator() {
+            currentSimState = "start";
+            renderSimulator();
+        }
+
+        // Init Simulator
+        renderSimulator();
+
+        /* ----------------------------------------------------
+           4. RISK CALCULATOR LOGIC
+        ---------------------------------------------------- */
+        function updateCalculator() {
+            const vendorVal = parseInt(document.getElementById('vendorAuditRange').value);
+            const otVal = parseInt(document.getElementById('otIsolationRange').value);
+            const becVal = parseInt(document.getElementById('becAuthRange').value);
+
+            // Update Text Displays
+            document.getElementById('vendorVal').innerText = `${vendorVal}% Covered`;
+            
+            const otLabels = ["Flat IT/OT Network", "Partial Air-Gap", "Full Air-Gap"];
+            document.getElementById('otVal').innerText = otLabels[otVal];
+
+            document.getElementById('becVal').innerText = `${becVal}% Enforced`;
+
+            // Calculate ALE (Annual Loss Expectation) - Baseline $5M
+            let baseLoss = 5000000;
+            baseLoss -= (vendorVal * 20000); // Up to -2.0M
+            baseLoss -= (otVal * 1000000);  // Up to -2.0M
+            baseLoss -= (becVal * 8000);    // Up to -0.8M
+
+            if (baseLoss < 200000) baseLoss = 200000;
+
+            document.getElementById('riskLossVal').innerText = `$${baseLoss.toLocaleString()}`;
+
+            // Score Badge Logic
+            const badge = document.getElementById('riskScoreBadge');
+            if (baseLoss > 3000000) {
+                badge.innerText = "HIGH RISK EXPOSURE";
+                badge.className = "inline-block px-4 py-1.5 rounded-full text-xs font-mono font-bold mb-4 bg-rose-500/10 text-rose-500 border border-rose-500/30";
+                document.getElementById('ransomFactor').innerText = "Critical";
+                document.getElementById('becFactor').innerText = "Severe";
+            } else if (baseLoss > 1200000) {
+                badge.innerText = "MODERATE EXPOSURE";
+                badge.className = "inline-block px-4 py-1.5 rounded-full text-xs font-mono font-bold mb-4 bg-amber-500/10 text-amber-500 border border-amber-500/30";
+                document.getElementById('ransomFactor').innerText = "Medium";
+                document.getElementById('becFactor').innerText = "Moderate";
+            } else {
+                badge.innerText = "LOW RISK / RESILIENT";
+                badge.className = "inline-block px-4 py-1.5 rounded-full text-xs font-mono font-bold mb-4 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30";
+                document.getElementById('ransomFactor').innerText = "Low";
+                document.getElementById('becFactor').innerText = "Mitigated";
+            }
+        }
+
+        /* ----------------------------------------------------
+           5. KNOWLEDGE QUIZ DATA & LOGIC
+        ---------------------------------------------------- */
+        const quizData = [
+            {
+                question: "1. Why are logistics enterprises frequently targeted as 'stepping-stone' vectors by cyber attackers?",
+                options: [
+                    "They possess no digital technology and rely solely on paper invoices.",
+                    "They maintain interconnected systems with large clients while often having less stringent security controls.",
+                    "Logistics networks are completely air-gapped from internet connections.",
+                    "Shipment tracking codes contain financial credit card data."
+                ],
+                correct: 1,
+                explanation: "Logistics providers often have shared EDI connections or system integration with large client networks, making them ideal entry points to breach higher-value corporate targets."
+            },
+            {
+                question: "2. What is the primary operational mitigation against ransomware spreading from corporate IT into physical Port Terminal cranes (OT)?",
+                options: [
+                    "Installing anti-virus on legacy gantry cranes.",
+                    "Network Segmentation and Purdue Model Air-Gapping between IT and OT networks.",
+                    "Increasing truck gate processing fees.",
+                    "Using public Wi-Fi networks for telemetry data."
+                ],
+                correct: 1,
+                explanation: "Network segmentation prevents ransomware on corporate IT systems (like administrative email) from jumping to physical OT controllers."
+            },
+            {
+                question: "3. Cryptographic firmware signing on warehouse IoT scanners prevents which type of weakness?",
+                options: [
+                    "Unauthorized loading of compromised, rogue device updates.",
+                    "Physical battery failure on handheld devices.",
+                    "GPS satellite positioning drift on delivery vans.",
+                    "Email spear-phishing attacks against management."
+                ],
+                correct: 0,
+                explanation: "Digital signatures ensure that handheld devices only accept authentic, verified firmware updates directly from the official manufacturer."
+            },
+            {
+                question: "4. Which security control is most effective at preventing Business Email Compromise (BEC) freight routing fraud?",
+                options: [
+                    "Disabling all mobile phones in distribution centers.",
+                    "Mandatory out-of-band verbal authorization and strict DMARC email enforcement.",
+                    "Increasing the physical warehouse security guard staff.",
+                    "Installing faster barcode scanners."
+                ],
+                correct: 1,
+                explanation: "Dual-control out-of-band checks verify payment or routing changes via trusted phone channels, preventing fake email requests from executing."
+            }
+        ];
+
+        let userAnswers = {};
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = quizData.map((q, qIndex) => `
+                <div class="space-y-3 pb-6 border-b border-slate-100 dark:border-slate-700/60 last:border-0">
+                    <p class="font-semibold text-slate-900 dark:text-white text-base">${q.question}</p>
+                    <div class="space-y-2">
+                        ${q.options.map((opt, oIndex) => `
+                            <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                                <input type="radio" name="quiz_q_${qIndex}" value="${oIndex}" onchange="selectQuizOption(${qIndex}, ${oIndex})" class="mt-0.5 text-cyan-600 focus:ring-cyan-500">
+                                <span>${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div id="quizExp_${qIndex}" class="hidden p-3 rounded-lg bg-slate-100 dark:bg-slate-900 text-xs text-slate-600 dark:text-slate-300"></div>
+                </div>
+            `).join('') + `
+                <button onclick="submitQuiz()" class="w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-sm transition-colors">
+                    Submit Knowledge Assessment
+                </button>
+            `;
+        }
+
+        function selectQuizOption(qIndex, oIndex) {
+            userAnswers[qIndex] = oIndex;
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            quizData.forEach((q, qIndex) => {
+                const expEl = document.getElementById(`quizExp_${qIndex}`);
+                expEl.classList.remove('hidden');
+                
+                if (userAnswers[qIndex] === q.correct) {
+                    score++;
+                    expEl.className = "p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-700 dark:text-emerald-300";
+                    expEl.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> <strong>Correct!</strong> ${q.explanation}`;
+                } else {
+                    expEl.className = "p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-xs text-rose-700 dark:text-rose-300";
+                    expEl.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> <strong>Incorrect.</strong> ${q.explanation}`;
+                }
+            });
+
+            // Summary
+            const summary = document.getElementById('quizSummary');
+            summary.classList.remove('hidden');
+            document.getElementById('quizScoreText').innerText = `${score} / ${quizData.length}`;
+            
+            if (score === quizData.length) {
+                document.getElementById('quizFeedbackText').innerText = "Outstanding! You have mastered key supply chain cybersecurity risks and defenses.";
+            } else {
+                document.getElementById('quizFeedbackText').innerText = "Good effort. Review the mitigation concepts above and re-try to boost your knowledge score.";
+            }
+
+            summary.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('quizSummary').classList.add('hidden');
+            renderQuiz();
+        }
+
+        // Init Quiz on load
+        renderQuiz();
+    </script>
+</body>
+</html>
